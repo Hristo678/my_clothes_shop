@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clothes shop</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<div
+        th:replace="fragments/navbar :: navbar">
+    Navbar
+</div>
+
+
+<div class="container-fluid">
+
+    <h1
+            class="text-center text-dark font-weight-bold mt-5">Продайте или купете изгодно дрехи сега!
+    </h1>
+<!--    <div class="row">-->
+
+<!--                <div class="men-clothes column">-->
+<!--                    <a class="h3 text-white font-weight-bold" th:href="@{offers/all}">Мъже</a>-->
+
+
+<!--                <div class="women-clothes column">-->
+<!--                    <a class="h3 text-white font-weight-bold" th:href="@{offers/all}">Жени</a>-->
+<!--                </div>-->
+
+<!--    </div>-->
+
+        <div class="row">
+            <div class="column">
+                <a th:href="@{/offers/{gender}(gender=MEN)}" class="text-center text-dark font-weight-bold h2 ">Мъже</a>
+                <a th:href="@{/offers/{gender}(gender=MEN)}">
+                    <img src="/images/mens-clothes.jpg" href="/offers/all" alt="Snow" style="width:100%">
+                </a>
+            </div>
+            <div class="column">
+                <div class="womens-link">
+                    <a th:href="@{/offers/{gender}(gender=WOMEN)}" class="text-center text-dark font-weight-bold h2 mt-5">Жени</a>
+                </div>
+                <a th:href="@{/offers/{gender}(gender=WOMEN)}">
+                    <img src="/images/womens-fashion-2.jpg" alt="Forest" style="width:100%">
+                </a>
+
+            </div>
+
+        </div>
+
+    <div class="container-fluid">
+        <h1 class="text-center text-dark mt-5">Най-новите оферти:</h1>
+        <div  class="offers row mx-auto d-flex flex-row justify-content-center">
+            <div th:each="o : ${offers}" th:object="${o}" class="offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0">
+                <a th:href="@{/offers/{id}/details(id=*{id})}">
+                    <div  class="card-img-top-wrapper">
+                        <img th:src="*{imageUrl}" class="card-img-top .img-fluid. max-width: 100% height: auto"  alt="" src="">
+                    </div>
+                </a>
+
+                <ul class="offer-details list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div th:text="*{name}" class="card-text"><span>• Price</span></div>
+                        <div th:text="*{price}" class="card-text"><span>• Price</span></div>
+
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <a class="card-link" th:href="@{/offers/{id}/details(id=*{id})}">Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div>
+    <footer></footer>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>

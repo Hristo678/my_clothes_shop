@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/head :: head">
+
+</head>
+
+<body>
+
+<div
+        th:replace="fragments/navbar :: navbar">
+    Navbar
+</div>
+
+
+<div class="container-fluid ">
+    <h2 class="text-center text-dark mt-5">Детайли</h2>
+    <div th:object="${offer}"  class="offers row mx-auto d-flex flex-row justify-content-center">
+        <div  class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0" >
+
+            <ul class="offer-details list-group list-group-flush">
+                <li class="list-group-item">
+
+                    <span class="font-weight-bold">Име на продукта: </span><div th:text="*{name}" class="card-text"></div>
+                    <span class="font-weight-bold">Цена:</span> <div th:text="*{price}" class="card-text"></div>
+                    <span class="font-weight-bold">Категория:</span><div th:text="*{category.name()}" class="card-text"></div>
+                    <span class="font-weight-bold">Размер:</span><div th:text="*{size.name()}" class="card-text"></div>
+                    <span class="font-weight-bold">Пол:</span><div th:text="*{gender.name()}" class="card-text"></div>
+                    <span class="font-weight-bold">Профил на продавача:</span>
+                    <a th:href="@{/seller/details/{offerId}(offerId=*{id})}">
+                        <div th:text="*{getSellerFirstAndLAstName()}" class="text-primary "></div>
+                    </a>
+                    <div th:text="|Преглеждания: *{viewsCount}|" class="card-text"></div>
+                    <span class="font-weight-bold">Описание:</span><div th:text="*{description}" class="card-text"></div>
+
+                </li>
+            </ul>
+            <div th:if="${showDeleteAndUpdateButton}" class="card-body offer-details ">
+                <a class="card-text text-dark font-weight-bold btn btn-outline-secondary" th:href="@{/offer/{id}/update(id=*{id})}">Редактирай</a>
+                <form  th:action="@{/offers/{id}/delete(id=*{id})}" th:method="delete">
+                    <input type="submit" class="btn text-dark font-weight-bold btn-outline-secondary" value="Изтрий"/>
+                </form>
+                <form th:action="@{/offers/{id}/add-picture(id=*{id})}" th:method="post" enctype="multipart/form-data" >
+                    <div>
+                        <p>Добави снимка:</p>
+                        <input type="file" name="picture" required>
+                        <input class="text-dark font-weight-bold btn btn-outline-secondary" type="submit" value="Добави">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
+            <div th:each="image : *{imagesUrl}">
+                <div class="carousel">
+
+                    <div class="carousel__item" >
+                        <img th:src="${image}" />
+                    </div>
+
+
+                    <div class="carousel__actions">
+
+                        <a class="carousel-control-prev carousel__button--prev btn btn-secondary" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next carousel__button--next btn btn-secondary" id="carousel__button--next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div>
+    <footer> </footer>
+</div>
+<script src="/js/offer-details.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+        integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>

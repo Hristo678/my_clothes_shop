@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clothes shop</title>
+    <link rel="stylesheet" href="/css/reset-css.css"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+</head>
+
+<body class="offer-add">
+
+<div
+        th:replace="fragments/navbar :: navbar">
+    Navbar
+</div>
+
+<main class="p-5 align-content-center bg-blur my-register-div">
+<div class="container ">
+    <h2 class="text-center text-white">Качване на оферта:</h2>
+    <form th:action="@{/offers/add}" th:method="POST" enctype="multipart/form-data" th:object="${offerAddBindingModel}"
+          class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="row">
+
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold h5" for="name">Име на офертата</label>
+                <input th:field="*{name}" th:errorclass="is-invalid" id="name" type="text" min="0" step="1" class="form-control"
+                       placeholder="Име"/>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Name of the offer is required!
+                </p>
+            </div>
+            <div  class="form-group col-md-6 mb-3">
+                <label for="price" class="text-white font-weight-bold h5">Цена</label>
+                <input th:field="*{price}" th:errorclass="is-invalid" id="price" type="number" min="0" step="1" class="form-control"
+                       placeholder="Цена"/>
+                <p  class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да посочите цена!
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div  class="form-group col-md-6 mb-3">
+                <label for="description" class="text-white font-weight-bold h5">Описание</label>
+                <input th:field="*{description}" th:errorclass="is-invalid" id="description" type="text"  class="form-control"
+                       placeholder="Описание"/>
+                <p  class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да направите описание!
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold h5" for="category">Категория</label>
+                <select th:field="*{category}" th:errorclass="is-invalid" id="category" class="form-control">
+                    <option th:each="c : ${categories}"  th:text="${c.name()}" th:value="${c}" th:selected="${c.name()}" value="">- Изберете категория -</option>
+
+                </select>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да изберете категория!
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold h5" for="gender">Пол</label>
+                <select th:field="*{gender}" th:errorclass="is-invalid" id="gender" class="form-control">
+                    <option th:each="g : ${genders}"  th:text="${g.name()}" th:value="${g}" th:selected="${g.name()}" value="">- Изберете пол -</option>
+
+                </select>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да изберете пол!
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-white font-weight-bold h5" for="size">Размер</label>
+                <select th:field="*{size}" th:errorclass="is-invalid" id="size" class="form-control">
+                    <option th:each="s : ${size}"  th:text="${s.name()}" th:value="${s}" th:selected="${s.name()}" value="">- Изберете размер -</option>
+
+                </select>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да изберете размер!
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="text-white font-weight-bold h5" for="imageUrl">Снимка</label>
+            <input th:field="*{picture}" th:errorclass="is-invalid" id="imageUrl" type="file" class="form-control"
+                   placeholder="Put vehicle image URL here" required>
+            <p class="errors alert alert-danger invalid-feedback">
+                Необходимо е да сложите снимка!
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg text-dark" value="Добави"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</main>
+
+<div>
+    <footer></footer>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>

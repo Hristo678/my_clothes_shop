@@ -1,0 +1,82 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head">
+
+</head>
+<body>
+<div
+        th:replace="fragments/navbar :: navbar">
+    Navbar
+</div>
+<div class="container">
+    <h2 class="text-center text-white">Регистрация</h2>
+    <form th:method="POST" th:action="@{/users/register}" th:object="${userRegisterBindingModel}"
+          class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="firstName" class="text-white font-weight-bold"><h4>Име</h4></label>
+                <input th:field="*{firstName}" th:errorclass="is-invalid" id="firstName" name="firstName" type="text" min="2" max="20" class="form-control"
+                       placeholder="Име"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Необходимо е име.
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="lastName" class="text-white font-weight-bold"><h4>Фамилия</h4></label>
+                <input th:field="*{lastName}" th:errorclass="is-invalid" id="lastName" name="lastName" type="text" min="2" max="20" class="form-control"
+                       placeholder="Фамилия"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Необходима е фамилия.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="username" class="text-white font-weight-bold"><h4>Потребителско име</h4></label>
+                <input th:field="*{username}" th:errorclass="is-invalid" id="username" name="username" type="text" min="2" max="20" class="form-control"
+                       placeholder="Потребителско име"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Необходимо е потребителско име.
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="password" class="text-white font-weight-bold"><h4>Парола</h4></label>
+                <input th:field="*{password}" th:errorclass="is-invalid" id="password" name="password" type="password" min="2" max="20" class="form-control"
+                       placeholder="Парола"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Необходима е парола.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label for="email" class="text-white font-weight-bold"><h4>Имейл</h4></label>
+                <input th:field="*{email}" th:errorclass="is-invalid" id="email" name="email" type="text" min="2" max="20" class="form-control"
+                       placeholder="Имейл"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Необходим е имейл.
+                </p>
+            </div>
+            <div class="form-group col-md-6 mb-3">
+                <label for="phoneNumber" class="text-white font-weight-bold"><h4>Телефонен номер:</h4></label>
+                <input th:field="*{phoneNumber}" th:errorclass="is-invalid" id="phoneNumber" name="email" type="text" min="2" max="20" class="form-control"
+                       placeholder="Телефонен номер"/>
+                <p class="invalid-feedback errors alert alert-danger">
+                    Невалиден телефонен номер.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col col-md-4">
+                <div class="button-holder d-flex">
+                    <input type="submit" class="btn btn-info btn-lg text-white font-weight-bold" value="Submit Offer"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
