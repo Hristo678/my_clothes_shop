@@ -1,16 +1,30 @@
-$('#loadAllCars').click(() => {
-    loadModels()
-});
 
-function loadModels(){
-    $("#models-container").empty();
-    console.log("Working...")
+const sellersCntr = document.getElementById('sellersCntr')
+const allSellers = []
 
-    fetch("http://localhost:8080/models/load/all").
-    then(response => response.json()).
-    then(json => json.forEach(model => {
-        let tableRow = `<tr><td>${model.name}</td><td>${model.startYear}</td><img src = ${model.imageUrl} alt=""><td></td></tr>`
-        $("#models-container").append(tableRow)
-    }))
+const displaySellers = (selelrs) => {
+    sellersCntr.innerHTML = selelrs.map(
+        (s)=> {
+            return asSeller(s)
+        }
+    ).join('')
 }
+
+function asSeller(s) {
+    let sellerHtml = `<div id="seller">`
+
+    sellerHtml += `<h4><a href="/seller/details/${s.offerId}"> ${s.username} </a> : ${s.numberOfOffers} оферти</h4><br/>`
+    sellerHtml += `</div>`
+
+    return sellerHtml
+}
+
+fetch(`http://localhost:8080/api/sellers`).
+then(response => response.json()).
+then(data => {
+    for (let seller of data) {
+        allSellers.push(seller)
+    }
+    displaySellers(allSellers)
+})
 
