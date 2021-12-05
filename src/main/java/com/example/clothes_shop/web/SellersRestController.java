@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Transactional
 @RestController
 public class SellersRestController {
     private UserService userService;
@@ -22,7 +22,7 @@ public class SellersRestController {
         this.modelMapper = modelMapper;
     }
 
-    @Transactional
+    
     @GetMapping("/api/sellers")
     public ResponseEntity<List<SellerViewModel>> getAllSellers(){
                 List<SellerViewModel> sellers = userService.findAll().stream().filter(u -> u.getOffers().size() > 0).map(u -> {

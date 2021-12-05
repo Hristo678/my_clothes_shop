@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -126,5 +127,35 @@ public class OffersServiceImpl implements OffersService {
     @Override
     public void saveOffer(OfferEntity offerEntity){
         offersRepository.save(offerEntity);
+    }
+
+    @Override
+    public void init() {
+        if (offersRepository.count() == 0){
+            OfferEntity offerEntity = new OfferEntity();
+            offerEntity.setName("Теникса на Boss");
+            offerEntity.setDescription("Предлагам чисто нова тениска на Boss, не е използвана и е в перфектно състояние!");
+            offerEntity.setCategory(CategoryEnum.SHIRT);
+            offerEntity.setSize(SizeEnum.M);
+            offerEntity.setGender(GenderEnum.MALE);
+            offerEntity.setOwner(userService.findById(1));
+            offerEntity.setPrice(BigDecimal.valueOf(100));
+            offerEntity.setImagesUrl(List.of("https://res.cloudinary.com/ditaldvoc/image/upload/v1637492723/pf1kjoerci4aricvgofg.jpg",
+                    "https://res.cloudinary.com/ditaldvoc/image/upload/v1638713283/hbeu50387414_001_350_cfvhyo.jpg"));
+            offersRepository.save(offerEntity);
+
+            OfferEntity offerEntity2 = new OfferEntity();
+            offerEntity2.setName("Яке на The North Face");
+            offerEntity2.setDescription("Предлагам яке на The North Face, много добре топли и е в перфектно състояние!");
+            offerEntity2.setCategory(CategoryEnum.JACKET);
+            offerEntity2.setSize(SizeEnum.L);
+            offerEntity2.setGender(GenderEnum.MALE);
+            offerEntity2.setOwner(userService.findById(1));
+            offerEntity2.setPrice(BigDecimal.valueOf(250));
+            offerEntity2.setImagesUrl(List.of("https://res.cloudinary.com/ditaldvoc/image/upload/v1638713416/the-north-face-pukheno-iake-retro-nuptse-nf0a4timjk31-cheren-regular-fit_u8fwlx.jpg",
+                    "https://res.cloudinary.com/ditaldvoc/image/upload/v1638713424/341852.002_3_jsvs7m.jpg"));
+            offersRepository.save(offerEntity2);
+        }
+
     }
 }

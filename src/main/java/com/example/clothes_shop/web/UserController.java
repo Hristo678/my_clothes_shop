@@ -41,6 +41,7 @@ public class UserController {
     @PostMapping("/users/register")
     public String registerPost(@Valid UserRegisterBindingModel userRegisterBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes){
 
+
         if (bindingResult.hasErrors() || !phoneNumberIsValid(userRegisterBindingModel.getPhoneNumber())){
 
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel)
@@ -69,12 +70,7 @@ public class UserController {
 
     @GetMapping("/sellers")
     public String getSellers(){
-//        List<SellerViewModel> sellers = userService.findAll().stream().filter(u -> u.getOffers().size() > 0).map(u -> {
-//            SellerViewModel seller = modelMapper.map(u, SellerViewModel.class);
-//            seller.setNumberOfOffers(u.getOffers().size());
-//            return seller;
-//        }).collect(Collectors.toList());
-//        model.addAttribute("sellers", sellers);
+
 
         return "sellers";
     }
@@ -93,7 +89,14 @@ public class UserController {
 
     private boolean phoneNumberIsValid(String phoneNumber) {
 
-        return phoneNumber.charAt(0) == '0' && phoneNumber.charAt(1) == '1' &&
-                phoneNumber.length() == 10 && phoneNumber.matches("[0-9+]") && !phoneNumber.matches("\\D");
+
+        for (int i = 0; i < phoneNumber.length(); i++) {
+            if (phoneNumber.charAt(i) > 'A' && phoneNumber.charAt(i) < 'Z'){
+                return false;
+            }
+
+        }
+        return phoneNumber.charAt(0) == '0' && phoneNumber.charAt(1) == '8' &&
+                phoneNumber.length() == 10;
     }
 }

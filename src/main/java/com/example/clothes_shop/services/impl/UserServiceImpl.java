@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
             userEntity.setPassword(passwordEncoder.encode("admin"));
             userEntity.setRoles(List.of(roleService.findByRole(RoleEnum.ADMIN), roleService.findByRole(RoleEnum.USER)));
             userEntity.setUsername("admin");
+            userEntity.setPhoneNumber("0883656789");
             userRepository.save(userEntity);
         }
 

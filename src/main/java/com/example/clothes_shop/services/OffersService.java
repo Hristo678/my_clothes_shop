@@ -32,4 +32,7 @@ public interface OffersService {
     void addPucture(Long id, MultipartFile picture) throws IOException;
 
     void saveOffer(OfferEntity offerEntity);
+
+    void init();
+
 }

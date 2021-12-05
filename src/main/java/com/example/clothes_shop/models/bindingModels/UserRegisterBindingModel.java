@@ -22,7 +22,8 @@ public class UserRegisterBindingModel {
     @Size(min = 3, max = 15)
     private String password;
     @Size(min = 10, max = 10)
-    @NumberFormat
+    @NotNull
+    @Size(min = 10, max = 10)
     private String phoneNumber;
 
     @NotNull
@@ -72,7 +73,7 @@ public class UserRegisterBindingModel {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return this.phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {

@@ -9,11 +9,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
+import javax.transaction.Transactional;
 import java.util.Map;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableScheduling
 @Configuration
+@Transactional
 public class ApplicationConficuration {
 
     private CloudinaryConfig config;
