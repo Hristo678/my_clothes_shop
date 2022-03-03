@@ -27,6 +27,7 @@ public class OfferEntity extends BaseEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> imagesUrl;
     private int viewsCount;
+    private boolean approved;
 
     public String getName() {
         return name;
@@ -98,5 +99,13 @@ public class OfferEntity extends BaseEntity {
 
     public void setViewsCount(int viewsCount) {
         this.viewsCount = viewsCount;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

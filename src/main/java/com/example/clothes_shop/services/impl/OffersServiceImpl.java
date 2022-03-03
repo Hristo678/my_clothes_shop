@@ -46,7 +46,13 @@ public class OffersServiceImpl implements OffersService {
     @Transactional
     @Override
     public List<OfferEntity> findAllOffers() {
-        return offersRepository.findAll();
+        return offersRepository.findAllByApprovedIsTrue();
+    }
+
+    @Transactional
+    @Override
+    public List<OfferEntity> findAllNotApprovedOffers() {
+        return offersRepository.findAllByApprovedIsFalse();
     }
 
     @Override
@@ -59,6 +65,7 @@ public class OffersServiceImpl implements OffersService {
         offer.setSize(SizeEnum.valueOf(offerAddBindingModel.getSize()));
         offer.setOwner(userService.findByUsername(username));
         offer.setImagesUrl(List.of(cloudinaryImage.getUrl()));
+        offer.setApproved(false);
 
         offersRepository.save(offer);
 

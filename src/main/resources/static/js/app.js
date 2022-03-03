@@ -1,4 +1,5 @@
-
+let image = document.getElementsByClassName("container");
+image.addEventListener("click", () => console.log("here"))
 const sellersCntr = document.getElementById('sellersCntr')
 const allSellers = []
 
@@ -27,4 +28,6 @@ then(data => {
     }
     displaySellers(allSellers)
 })
+
+
 

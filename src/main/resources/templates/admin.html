@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/head :: head">
+
+</head>
+
+<body>
+
+<div
+        th:replace="fragments/navbar :: navbar">
+
+</div>
+
+
+<div class="container-fluid align-content-center">
+
+    <h2 class="text-center">Оферти за удобряване:</h2>
+
+        <h2 class="text-center text-dark mt-5">Оферти</h2>
+    <div class="offers row mx-auto d-flex flex-row justify-content-center admin-offers">
+        <div th:each="o : ${offers}" th:object="${o}"
+             th:class="|offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0 *{category.name()} active  price- *{price}|" class="currentOffer">
+            <a th:href="@{/offers/{id}/details(id=*{id})}">
+                <div class="card-img-top-wrapper">
+                    <img th:src="*{imageUrl}" class="card-img-top" src="/offers/${o.id}/details" alt="Car image">
+                </div>
+            </a>
+            <ul class="offer-details list-group list-group-flush">
+                <li class="list-group-item">
+                    <div th:text="*{name}" class="card-text"><span>• Name</span></div>
+                    <div th:text="*{price}"  class="card-text price"><span>• Price</span></div>
+                    <input type="hidden" name="price" id="price-value" th:value="*{price}">
+                    <a class="card-link" th:href="@{/offers/{id}/details(id=*{id})}">Details</a>
+                </li>
+            </ul>
+            <div>
+                <form th:action="@{/approve/{id}(id=*{id})}"   th:method="post"  >
+                    <button class="admin-button">Качи офертата</button>
+                </form>
+
+                <button class="admin-button">Изтрии офертата</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div>
+    <footer></footer>
+</div>
+<script src="/js/offers.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+        integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>

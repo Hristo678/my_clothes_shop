@@ -44,6 +44,9 @@
                     <li class="nav-item">
                         <a class="nav-link btn font-weight-bold text-white" th:href="@{/profile}">Профил</a>
                     </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link btn font-weight-bold text-white" th:href="@{/admin}">Админ</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link btn font-weight-bold text-white" th:href="@{/sellers}">Всички продавачи</a>
                     </li>

@@ -14,6 +14,8 @@ public interface OffersService {
 
     List<OfferEntity> findAllOffers();
 
+    List<OfferEntity> findAllNotApprovedOffers();
+
     void addOffer(OfferAddBindingModel offerAddBindingModel, String username) throws IOException;
 
     List<OfferEntity> findTheNewestOffers();
