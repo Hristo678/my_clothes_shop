@@ -21,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class OffersServiceImpl implements OffersService {
@@ -57,14 +59,25 @@ public class OffersServiceImpl implements OffersService {
 
     @Override
     public void addOffer(OfferAddBindingModel offerAddBindingModel, String username) throws IOException {
-
-        CloudinaryImage cloudinaryImage = cloudinaryService.upload(offerAddBindingModel.getPicture());
+        List<CloudinaryImage> cloudinaryImages = new ArrayList<>();
+        List<MultipartFile> images = offerAddBindingModel.getPictures();
+        images.forEach(i -> {
+            try {
+                CloudinaryImage cloudinaryImage = cloudinaryService.upload(i);
+                cloudinaryImages.add(cloudinaryImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+//        CloudinaryImage cloudinaryImage = cloudinaryService.upload(offerAddBindingModel.getPicture());
         OfferEntity offer = modelMapper.map(offerAddBindingModel, OfferEntity.class);
         offer.setCategory(CategoryEnum.valueOf(offerAddBindingModel.getCategory()));
         offer.setGender(GenderEnum.valueOf(offerAddBindingModel.getGender()));
         offer.setSize(SizeEnum.valueOf(offerAddBindingModel.getSize()));
         offer.setOwner(userService.findByUsername(username));
-        offer.setImagesUrl(List.of(cloudinaryImage.getUrl()));
+        List<String> imagesUrls = cloudinaryImages.stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
+        offer.setImagesUrl(imagesUrls);
+//        offer.setImagesUrl(List.of(cloudinaryImage.getUrl()));
         offer.setApproved(false);
 
         offersRepository.save(offer);

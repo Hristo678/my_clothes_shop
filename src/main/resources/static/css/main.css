@@ -8,12 +8,12 @@ body {
  }
 
 .offer-add {
-     background-image: url('/images/9.jpg');
+
      background-position: center center;
      background-repeat: no-repeat;
      background-attachment: fixed;
      background-size: cover;
-     background-color: #464646;
+
 }
 
 
@@ -125,6 +125,19 @@ body > div.container-fluid > div.row > div:nth-child(2) > div > a{
 .button:hover span:after {
      opacity: 1;
      right: 0;
+}
+
+
+
+.arrows{
+     justify-content: center;
+}
+
+#button-left{
+     display: none;
+}
+#button-right{
+     display: none;
 }
 
 body > .container-fluid > .admin-offers .admin-button {
@@ -292,5 +305,26 @@ body > div.container-fluid.align-content-center > section > ul > li:nth-child(9)
 .about {
      text-align: center;
      padding-top: 10rem;
+}
+
+.image-preview{
+     width: 424px;
+     min-height: 200px;
+     border: 2px solid #dddddd;
+     margin-top: 15px;
+
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-weight: bold;
+     background-color: white;
+
+
+}
+
+.image-preview__image{
+     display: none;
+     width: 100%
+;
 }
 

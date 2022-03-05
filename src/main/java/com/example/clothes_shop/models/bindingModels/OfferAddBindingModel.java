@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class OfferAddBindingModel {
 
@@ -25,7 +26,7 @@ public class OfferAddBindingModel {
     @NotNull
     private String size;
     @NotNull
-    private MultipartFile picture;
+    private List<MultipartFile> pictures;
 
     public String getName() {
         return name;
@@ -75,11 +76,11 @@ public class OfferAddBindingModel {
         this.size = size;
     }
 
-    public MultipartFile getPicture() {
-        return picture;
+    public List<MultipartFile> getPictures() {
+        return pictures;
     }
 
-    public void setPicture(MultipartFile picture) {
-        this.picture = picture;
+    public void setPictures(List<MultipartFile> picture) {
+        this.pictures = picture;
     }
 }

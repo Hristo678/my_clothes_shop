@@ -1,7 +1,9 @@
-let image = document.getElementsByClassName("container");
-image.addEventListener("click", () => console.log("here"))
-const sellersCntr = document.getElementById('sellersCntr')
+// let image = document.getElementsByClassName("container");
+// image.addEventListener("onClick", () => console.log("here"))
+// const sellersCntr = document.getElementById('sellersCntr')
 const allSellers = []
+
+console.log("Here")
 
 const displaySellers = (selelrs) => {
     sellersCntr.innerHTML = selelrs.map(
