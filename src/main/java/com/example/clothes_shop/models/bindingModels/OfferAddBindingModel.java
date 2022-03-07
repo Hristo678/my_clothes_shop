@@ -24,7 +24,7 @@ public class OfferAddBindingModel {
     @NotNull
     private String gender;
     @NotNull
-    private String size;
+    private List<String> sizes;
     @NotNull
     private List<MultipartFile> pictures;
 
@@ -68,12 +68,12 @@ public class OfferAddBindingModel {
         this.gender = gender;
     }
 
-    public String getSize() {
-        return size;
+    public List<String> getSizes() {
+        return sizes;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setSizes(List<String> sizes) {
+        this.sizes = sizes;
     }
 
     public List<MultipartFile> getPictures() {

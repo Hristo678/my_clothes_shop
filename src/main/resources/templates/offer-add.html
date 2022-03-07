@@ -14,13 +14,13 @@
 
 <main class="p-5 align-content-center bg-blur my-register-div">
 <div class="container ">
-    <h2 class="text-center text-white">Качване на оферта:</h2>
+    <h2 class="text-center text-dark">Качване на оферта:</h2>
     <form th:action="@{/offers/add}" th:method="POST" enctype="multipart/form-data" th:object="${offerAddBindingModel}"
           class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
         <div class="row">
 
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5" for="name">Име на офертата</label>
+                <label class="text-center text-dark font-weight-bold h5" for="name">Име на офертата</label>
                 <input th:field="*{name}" th:errorclass="is-invalid" id="name" type="text" min="0" step="1" class="form-control"
                        placeholder="Име"/>
                 <p class="errors alert alert-danger invalid-feedback">
@@ -28,7 +28,7 @@
                 </p>
             </div>
             <div  class="form-group col-md-6 mb-3">
-                <label for="price" class="text-white font-weight-bold h5">Цена</label>
+                <label for="price" class="text-dark font-weight-bold h5">Цена</label>
                 <input th:field="*{price}" th:errorclass="is-invalid" id="price" type="number" min="0" step="1" class="form-control"
                        placeholder="Цена"/>
                 <p  class="errors alert alert-danger invalid-feedback">
@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div  class="form-group col-md-6 mb-3">
-                <label for="description" class="text-white font-weight-bold h5">Описание</label>
+                <label for="description" class="text-dark font-weight-bold h5">Описание</label>
                 <input th:field="*{description}" th:errorclass="is-invalid" id="description" type="text"  class="form-control"
                        placeholder="Описание"/>
                 <p  class="errors alert alert-danger invalid-feedback">
@@ -46,7 +46,7 @@
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5" for="category">Категория</label>
+                <label class="text-center text-dark font-weight-bold h5" for="category">Категория</label>
                 <select th:field="*{category}" th:errorclass="is-invalid" id="category" class="form-control">
                     <option th:each="c : ${categories}"  th:text="${c.name()}" th:value="${c}" th:selected="${c.name()}" value="">- Изберете категория -</option>
 
@@ -58,7 +58,7 @@
         </div>
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5" for="gender">Пол</label>
+                <label class="text-center text-dark font-weight-bold h5" for="gender">Пол</label>
                 <select th:field="*{gender}" th:errorclass="is-invalid" id="gender" class="form-control">
                     <option th:each="g : ${genders}"  th:text="${g.name()}" th:value="${g}" th:selected="${g.name()}" value="">- Изберете пол -</option>
 
@@ -68,9 +68,9 @@
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5" for="size">Размер</label>
-                <select th:field="*{size}" th:errorclass="is-invalid" id="size" class="form-control">
-                    <option th:each="s : ${size}"  th:text="${s.name()}" th:value="${s}" th:selected="${s.name()}" value="">- Изберете размер -</option>
+                <label class="text-center text-dark font-weight-bold h5" for="size">Размери</label>
+                <select multiple th:field="*{sizes}" th:errorclass="is-invalid" id="size" class="form-control">
+                    <option th:each="s : ${size}"  th:text="${s.name()}" th:value="${s}" th:selected="${s.name()}" type="check-box" value="">- Изберете размер -</option>
 
                 </select>
                 <p class="errors alert alert-danger invalid-feedback">
@@ -80,7 +80,7 @@
         </div>
 
         <div class="form-group">
-            <label class="text-white font-weight-bold h5" for="imageUrl">Снимка</label>
+            <label class="text-dark font-weight-bold h5" for="imageUrl">Снимка</label>
             <input th:field="*{pictures}" th:errorclass="is-invalid" id="imageUrl" type="file" multiple class="form-control image-input"
                    placeholder="Put vehicle image URL here" required>
             <p class="errors alert alert-danger invalid-feedback">

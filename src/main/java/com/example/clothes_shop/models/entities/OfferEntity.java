@@ -5,6 +5,7 @@ import com.example.clothes_shop.models.enums.GenderEnum;
 import com.example.clothes_shop.models.enums.SizeEnum;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,8 @@ public class OfferEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
     @Enumerated(EnumType.STRING)
-    private SizeEnum size;
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<SizeEnum> sizes;
     @ElementCollection(fetch = FetchType.LAZY)
     private List<String> imagesUrl;
     private int viewsCount;
@@ -77,12 +79,12 @@ public class OfferEntity extends BaseEntity {
         this.gender = gender;
     }
 
-    public SizeEnum getSize() {
-        return size;
+    public List<SizeEnum> getSizes() {
+        return sizes;
     }
 
-    public void setSize(SizeEnum size) {
-        this.size = size;
+    public void setSizes(List<SizeEnum> sizes) {
+        this.sizes = sizes;
     }
 
     public List<String> getImagesUrl() {
@@ -107,5 +109,9 @@ public class OfferEntity extends BaseEntity {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public void addSize(SizeEnum size){
+        this.sizes.add(size);
     }
 }

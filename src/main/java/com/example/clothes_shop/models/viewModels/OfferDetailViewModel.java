@@ -15,7 +15,7 @@ public class OfferDetailViewModel {
     private BigDecimal price;
     private CategoryEnum category;
     private String description;
-    private SizeEnum size;
+    private List<SizeEnum> sizes;
     private GenderEnum gender;
     private String sellerFirstAndLAstName;
     private int viewsCount;
@@ -76,12 +76,12 @@ public class OfferDetailViewModel {
         this.description = description;
     }
 
-    public SizeEnum getSize() {
-        return size;
+    public List<SizeEnum> getSizes() {
+        return sizes;
     }
 
-    public void setSize(SizeEnum size) {
-        this.size = size;
+    public void setSizes(List<SizeEnum> sizes) {
+        this.sizes = sizes;
     }
 
     public GenderEnum getGender() {

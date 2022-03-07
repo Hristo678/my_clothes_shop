@@ -31,7 +31,7 @@ public interface OffersService {
 
     void update(OfferUpdateBindingModel offer);
 
-    void addPucture(Long id, MultipartFile picture) throws IOException;
+    void addPictures(Long id, List<MultipartFile> pictures) throws IOException;
 
     void saveOffer(OfferEntity offerEntity);
 

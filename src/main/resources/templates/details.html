@@ -24,7 +24,7 @@
                     <span class="font-weight-bold">Име на продукта: </span><div th:text="*{name}" class="card-text"></div>
                     <span class="font-weight-bold">Цена:</span> <div th:text="*{price}" class="card-text"></div>
                     <span class="font-weight-bold">Категория:</span><div th:text="*{category.name()}" class="card-text"></div>
-                    <span class="font-weight-bold">Размер:</span><div th:text="*{size.name()}" class="card-text"></div>
+                    <span class="font-weight-bold">Размери:</span><div th:text="${sizes}" class="card-text"></div>
                     <span class="font-weight-bold">Пол:</span><div th:text="*{gender.name()}" class="card-text"></div>
                     <span class="font-weight-bold">Профил на продавача:</span>
                     <a th:href="@{/seller/details/{offerId}(offerId=*{id})}">
@@ -43,7 +43,7 @@
                 <form th:action="@{/offers/{id}/add-picture(id=*{id})}" th:method="post" enctype="multipart/form-data" >
                     <div>
                         <p>Добави снимка:</p>
-                        <input type="file" name="picture" required>
+                        <input type="file" multiple name="pictures" required>
                         <input class="text-dark font-weight-bold btn btn-outline-secondary" type="submit" value="Добави">
                     </div>
                 </form>

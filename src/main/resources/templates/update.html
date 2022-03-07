@@ -25,15 +25,15 @@
         <div class="row">
 
             <div class="form-group col-md-6 mb-3">
-                <label  for="price" class="text-white font-weight-bold h5">Цена</label>
+                <label  for="price" class="text-dark font-weight-bold h5">Цена</label>
                 <input id="price" th:field="*{price}"  th:errorclass="is-invalid" type="number" class="form-control"
-                       placeholder="Suggested price"/>
+                       placeholder="Цена"/>
                 <p class="invalid-feedback errors alert alert-danger">
                     Цената е задължителна.
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label  for="name" class="text-white font-weight-bold h5">Име на офертата</label>
+                <label  for="name" class="text-dark font-weight-bold h5">Име на офертата</label>
                 <input id="name" th:field="*{name}"  th:errorclass="is-invalid" type="number" class="form-control"
                        placeholder="Suggested price"/>
                 <p class="invalid-feedback errors alert alert-danger">
@@ -43,7 +43,7 @@
         </div>
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5" for="category">Категория</label>
+                <label class="text-center text-dark font-weight-bold h5" for="category">Категория</label>
                 <select th:name="category"  th:errorclass="is-invalid" id="category" class="form-control">
                     <option value="">- Select engine type -</option>
                     <option th:each="category : ${categories}"
@@ -59,7 +59,7 @@
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5" for="gender">Пол</label>
+                <label class="text-center text-dark font-weight-bold h5" for="gender">Пол</label>
                 <select th:name="gender"  th:errorclass="is-invalid" id="gender" class="form-control">
                     <option value="">- Select transmission type -</option>
                     <option th:each="gender : ${genders}"
@@ -75,25 +75,26 @@
         </div>
         <div class="row">
             <div class="form-group col-md-6 mb-3">
-                <label class="text-center text-white font-weight-bold h5 " for="size">Размер</label>
-                <select th:name="size"  th:errorclass="is-invalid" id="size" class="form-control">
-                    <option value="">- Select transmission type -</option>
+                <label class="text-center text-dark font-weight-bold h5 " for="size">Размери</label>
+                <select th:name="sizes" multiple  th:errorclass="is-invalid" id="size" class="form-control">
+
                     <option th:each="size : ${sizes}"
                             th:text="${size}"
                             th:value="${size}"
-                            th:selected="${size} ==  *{size}"> Размер
+
+                    >
                     </option>
                 </select>
                 <p class="invalid-feedback errors alert alert-danger">
-                    Полът е задължителен.
+                    Размерът е задължителен.
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
-                <label class="text-white font-weight-bold h5" for="description">Описание</label>
+                <label class="text-dark font-weight-bold h5" for="description">Описание</label>
                 <textarea id="description" th:field = "*{description}" th:errorclass="is-invalid" type="textarea" class="form-control" rows="3"
                           placeholder="Description"></textarea>
                 <p class="invalid-feedback errors alert alert-danger">
-                    Description is required.
+                    Описаниетое задължително.
                 </p>
             </div>
         </div>

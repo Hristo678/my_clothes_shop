@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface OffersRepository extends JpaRepository<OfferEntity, Long> {
 
-    List<OfferEntity> findAllByIdIsGreaterThan(long id);
+    List<OfferEntity> findAllByIdIsGreaterThanAndApprovedIsTrue(long id);
     List<OfferEntity> findAllByOwnerIs(UserEntity owner);
     List<OfferEntity> findAllByApprovedIsTrue();
     List<OfferEntity> findAllByApprovedIsFalse();

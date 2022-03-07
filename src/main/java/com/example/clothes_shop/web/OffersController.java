@@ -12,6 +12,7 @@ import com.example.clothes_shop.models.viewModels.OfferViewModel;
 import com.example.clothes_shop.models.viewModels.UserDetailsView;
 import com.example.clothes_shop.services.OffersService;
 import com.example.clothes_shop.services.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -109,9 +110,11 @@ public class OffersController {
         OfferDetailViewModel offerDetailViewModel = modelMapper.map(offer, OfferDetailViewModel.class);
         offerDetailViewModel.setSellerFirstAndLAstName(offer.getOwner().getFirstName() + " " + offer.getOwner().getLastName());
         offerDetailViewModel.setImagesUrl(offer.getImagesUrl());
+        String sizes = offer.getSizes().stream().map(Enum::toString).collect(Collectors.joining(" "));
 
 
         model.addAttribute("offer", offerDetailViewModel);
+        model.addAttribute("sizes", sizes);
         model.addAttribute("showDeleteAndUpdateButton", showDeleteAndUpdateButton);
 
 
@@ -160,10 +163,12 @@ public class OffersController {
         return "redirect:/offers/ALL";
     }
 
+    @Transactional
     @GetMapping("/offer/{id}/update")
     public String update(@PathVariable Long id, Model model){
         OfferEntity offerEntity = offersService.findById(id);
         OfferUpdateBindingModel offerUpdateBindingModel = modelMapper.map(offerEntity, OfferUpdateBindingModel.class);
+        offerUpdateBindingModel.setSizes(offerEntity.getSizes());
         model.addAttribute("offer", offerUpdateBindingModel);
         model.addAttribute("genders", GenderEnum.values());
         model.addAttribute("categories", CategoryEnum.values());
@@ -193,9 +198,9 @@ public class OffersController {
 
     @PostMapping("/offers/{id}/add-picture")
     @PreAuthorize("@offersServiceImpl.isOwner(#user.name, #id)")
-    public String addPicture(@PathVariable Long id , Principal user, Model model, @RequestParam("picture") MultipartFile file) throws IOException {
-
-        offersService.addPucture(id, file);
+    public String addPicture(@PathVariable Long id , Principal user, Model model, @RequestParam("pictures") List<MultipartFile> files) throws IOException {
+        List<MultipartFile> pict = files;
+        offersService.addPictures(id, files);
         return "redirect:/offers/"+ id + "/details";
     }
 

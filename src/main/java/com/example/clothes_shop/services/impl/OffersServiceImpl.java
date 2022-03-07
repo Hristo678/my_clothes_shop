@@ -34,6 +34,7 @@ public class OffersServiceImpl implements OffersService {
     private ModelMapper modelMapper;
     private UserService userService;
     private UserRepository userRepository;
+    private  static boolean isOwner = false;
 
     public OffersServiceImpl(OffersRepository offersRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper, UserService userService, UserRepository userRepository) {
         this.offersRepository = offersRepository;
@@ -73,7 +74,10 @@ public class OffersServiceImpl implements OffersService {
         OfferEntity offer = modelMapper.map(offerAddBindingModel, OfferEntity.class);
         offer.setCategory(CategoryEnum.valueOf(offerAddBindingModel.getCategory()));
         offer.setGender(GenderEnum.valueOf(offerAddBindingModel.getGender()));
-        offer.setSize(SizeEnum.valueOf(offerAddBindingModel.getSize()));
+//        offerAddBindingModel.getSizes().forEach(s -> {
+//            offer.addSize(SizeEnum.valueOf(s));
+//        });
+//        offer.setSize(SizeEnum.valueOf(offerAddBindingModel.getSize()));
         offer.setOwner(userService.findByUsername(username));
         List<String> imagesUrls = cloudinaryImages.stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
         offer.setImagesUrl(imagesUrls);
@@ -90,7 +94,7 @@ public class OffersServiceImpl implements OffersService {
     public List<OfferEntity> findTheNewestOffers() {
         long idForTheLastSixOffers = offersRepository.count() - 6 > 0 ? offersRepository.count() -1 : 0;
 
-        return offersRepository.findAllByIdIsGreaterThan(idForTheLastSixOffers);
+        return offersRepository.findAllByIdIsGreaterThanAndApprovedIsTrue(idForTheLastSixOffers);
     }
 
     @Override
@@ -108,14 +112,17 @@ public class OffersServiceImpl implements OffersService {
 
         UserEntity user = userRepository.findByUsername(name).orElse(null);
         OfferEntity offer = offersRepository.findById(id).orElse(null);
-        if (user.getRoles().contains(RoleEnum.ADMIN)) {
-            return true;
-        }
+
+        user.getRoles().forEach(r ->{
+            if (r.getRole().toString().equals("ADMIN")){
+                isOwner = true;
+            }
+        });
         if (offer.getOwner().getUsername().equals(user.getUsername())) {
-            return true;
+            isOwner = true;
         }
 
-        return false;
+        return isOwner;
     }
 
     @Override
@@ -128,7 +135,7 @@ public class OffersServiceImpl implements OffersService {
         OfferEntity offerEntity = offersRepository.findById(offer.getId()).orElse(null);
         offerEntity.setPrice(offer.getPrice());
         offerEntity.setGender(offer.getGender());
-        offerEntity.setSize(offer.getSize());
+        offerEntity.setSizes(offer.getSizes());
         offerEntity.setCategory(offer.getCategory());
         offerEntity.setDescription(offer.getDescription());
         offerEntity.setName(offer.getName());
@@ -137,10 +144,17 @@ public class OffersServiceImpl implements OffersService {
 
     @Transactional
     @Override
-    public void addPucture(Long id, MultipartFile picture) throws IOException {
-        CloudinaryImage cloudinaryImage = cloudinaryService.upload(picture);
+    public void addPictures(Long id, List<MultipartFile> pictures) throws IOException {
+
         OfferEntity offerEntity = offersRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        offerEntity.getImagesUrl().add(cloudinaryImage.url);
+        pictures.forEach(p -> {
+            try {
+                CloudinaryImage cloudinaryImage = cloudinaryService.upload(p);
+                offerEntity.getImagesUrl().add(cloudinaryImage.url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 
@@ -156,7 +170,7 @@ public class OffersServiceImpl implements OffersService {
             offerEntity.setName("Теникса на Boss");
             offerEntity.setDescription("Предлагам чисто нова тениска на Boss, не е използвана и е в перфектно състояние!");
             offerEntity.setCategory(CategoryEnum.SHIRT);
-            offerEntity.setSize(SizeEnum.M);
+            offerEntity.setSizes(List.of(SizeEnum.M));
             offerEntity.setGender(GenderEnum.MALE);
             offerEntity.setOwner(userService.findById(1));
             offerEntity.setPrice(BigDecimal.valueOf(100));
@@ -168,7 +182,7 @@ public class OffersServiceImpl implements OffersService {
             offerEntity2.setName("Яке на The North Face");
             offerEntity2.setDescription("Предлагам яке на The North Face, много добре топли и е в перфектно състояние!");
             offerEntity2.setCategory(CategoryEnum.JACKET);
-            offerEntity2.setSize(SizeEnum.L);
+            offerEntity2.setSizes(List.of(SizeEnum.L));
             offerEntity2.setGender(GenderEnum.MALE);
             offerEntity2.setOwner(userService.findById(1));
             offerEntity2.setPrice(BigDecimal.valueOf(250));

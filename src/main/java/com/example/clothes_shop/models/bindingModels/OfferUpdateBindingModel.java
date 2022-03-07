@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class OfferUpdateBindingModel {
 
@@ -26,7 +27,7 @@ public class OfferUpdateBindingModel {
     @NotNull
     private GenderEnum gender;
     @NotNull
-    private SizeEnum size;
+    private List<SizeEnum> sizes;
 
     public long getId() {
         return id;
@@ -76,11 +77,11 @@ public class OfferUpdateBindingModel {
         this.gender = gender;
     }
 
-    public SizeEnum getSize() {
-        return size;
+    public List<SizeEnum> getSizes() {
+        return sizes;
     }
 
-    public void setSize(SizeEnum size) {
-        this.size = size;
+    public void setSizes(List<SizeEnum> sizes) {
+        this.sizes = sizes;
     }
 }
