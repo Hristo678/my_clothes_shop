@@ -328,3 +328,14 @@ body > div.container-fluid.align-content-center > section > ul > li:nth-child(9)
 ;
 }
 
+.trash-icon {
+     font-size: 23px;
+     cursor: pointer;
+      display: inherit;
+     text-align: right;
+     color: #dc3545;
+     padding-right: 8px;
+     padding-bottom: 2px;
+
+}
+

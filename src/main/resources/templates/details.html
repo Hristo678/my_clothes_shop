@@ -50,10 +50,16 @@
             </div>
         </div>
         <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
+            <form  th:if="${showDeleteAndUpdateButton}" th:action="@{/offers/image/delete/{id}(id=*{id})}">
+                <i  class="bi bi-x-circle-fill trash-icon"></i>
+            </form>
             <div th:each="image : *{imagesUrl}">
+
                 <div class="carousel">
 
                     <div class="carousel__item" >
+
+
                         <img th:src="${image}" />
                     </div>
 
