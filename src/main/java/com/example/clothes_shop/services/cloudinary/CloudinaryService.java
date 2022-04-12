@@ -14,10 +14,12 @@ public class CloudinaryService {
     private static final String TEMP_FILE = "temp-file";
     private static final String URL = "url";
     private static final String PUBLIC_ID = "public_id";
+    private CloudinaryImageRepository cloudinaryImageRepository;
 
     private final Cloudinary cloudinary;
 
-    public CloudinaryService(Cloudinary cloudinary) {
+    public CloudinaryService(CloudinaryImageRepository cloudinaryImageRepository, Cloudinary cloudinary) {
+        this.cloudinaryImageRepository = cloudinaryImageRepository;
         this.cloudinary = cloudinary;
     }
 
@@ -47,5 +49,13 @@ public class CloudinaryService {
             return false;
         }
 
+    }
+
+    public void saveImage(CloudinaryImage image){
+        this.cloudinaryImageRepository.save(image);
+    }
+
+    public void deleteImage(String publicId){
+        cloudinaryImageRepository.delete(cloudinaryImageRepository.findByPublicId(publicId));
     }
 }

@@ -53,6 +53,16 @@
                 <div id="price-range" class="slider slider-box"></div>
             </li>
             <li class="filter " data-filter="filter">Филтрирай</li>
+            <li class data-filter="HATS">
+                <form name="formid">
+                    <label  for="clothCondition">Състояние</label>
+                    <select class="clothCondition" id="clothCondition">
+                        <option class="clothCondition" value="ALL">Всичко</option>
+                        <option th:each="c : ${clothConditions}" class="clothCondition"  th:text="${c.label}" th:value="${c}"  ></option>
+                    </select>
+                </form>
+
+            </li>
 
         </ul>
     </section>
@@ -61,7 +71,7 @@
     <h2 class="text-center text-dark mt-5">Оферти</h2>
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
         <div th:each="o : ${offers}" th:object="${o}"
-             th:class="|offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0 *{category.name()} active  price- *{price}|" class="currentOffer">
+             th:class="|offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0 *{category.name()} *{clotheCondition.name()}  conditionFiltered categoryFiltered price- *{price}|" class="currentOffer">
             <a th:href="@{/offers/{id}/details(id=*{id})}">
             <div class="card-img-top-wrapper">
                     <img th:src="*{imageUrl}" class="card-img-top" src="/offers/${o.id}/details" alt="Car image">
@@ -75,10 +85,12 @@
                     <a class="card-link" th:href="@{/offers/{id}/details(id=*{id})}">Details</a>
                 </li>
             </ul>
-
-
-
         </div>
+    </div>
+    <div id="pages">
+        <button>prev page</button>
+        <p>num of page</p>
+        <button>next page</button>
     </div>
 </div>
 

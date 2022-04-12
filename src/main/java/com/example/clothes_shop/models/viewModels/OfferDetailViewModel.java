@@ -1,8 +1,10 @@
 package com.example.clothes_shop.models.viewModels;
 
 import com.example.clothes_shop.models.enums.CategoryEnum;
+import com.example.clothes_shop.models.enums.ConditionEnum;
 import com.example.clothes_shop.models.enums.GenderEnum;
 import com.example.clothes_shop.models.enums.SizeEnum;
+import com.example.clothes_shop.services.cloudinary.CloudinaryImage;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,13 +12,14 @@ import java.util.List;
 public class OfferDetailViewModel {
 
     private Long id;
-    private List<String> imagesUrl;
+    private List<CloudinaryImage> imagesUrl;
     private String name;
     private BigDecimal price;
     private CategoryEnum category;
     private String description;
     private List<SizeEnum> sizes;
     private GenderEnum gender;
+    private ConditionEnum clotheCondition;
     private String sellerFirstAndLAstName;
     private int viewsCount;
 
@@ -36,11 +39,11 @@ public class OfferDetailViewModel {
         this.id = id;
     }
 
-    public List<String> getImagesUrl() {
+    public List<CloudinaryImage> getImagesUrl() {
         return imagesUrl;
     }
 
-    public void setImagesUrl(List<String> imagesUrl) {
+    public void setImagesUrl(List<CloudinaryImage> imagesUrl) {
         this.imagesUrl = imagesUrl;
     }
 
@@ -98,5 +101,13 @@ public class OfferDetailViewModel {
 
     public void setViewsCount(int viewsCount) {
         this.viewsCount = viewsCount;
+    }
+
+    public ConditionEnum getClotheCondition() {
+        return clotheCondition;
+    }
+
+    public void setClotheCondition(ConditionEnum clotheCondition) {
+        this.clotheCondition = clotheCondition;
     }
 }

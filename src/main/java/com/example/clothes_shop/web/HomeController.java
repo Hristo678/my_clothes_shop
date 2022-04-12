@@ -1,5 +1,6 @@
 package com.example.clothes_shop.web;
 
+import com.example.clothes_shop.models.entities.OfferEntity;
 import com.example.clothes_shop.models.viewModels.OfferViewModel;
 import com.example.clothes_shop.services.OffersService;
 import org.modelmapper.ModelMapper;
@@ -27,12 +28,17 @@ public class HomeController {
     public String home(Model model){
         List<OfferViewModel> offers = offersService.findTheNewestOffers().stream().map(o -> {
             OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
-            offer.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
+            List<String> imageUrls = getImageUrl(o);
+            offer.setImageUrl(imageUrls.stream().findFirst().orElse(null));
             return offer;
         }).collect(Collectors.toList());
         model.addAttribute("offers", offers);
 
         return "index";
+    }
+
+    private List<String> getImageUrl(OfferEntity o) {
+        return o.getImagesUrl().stream().map(offer -> offer.getUrl()).collect(Collectors.toList());
     }
 
     @GetMapping("/about")

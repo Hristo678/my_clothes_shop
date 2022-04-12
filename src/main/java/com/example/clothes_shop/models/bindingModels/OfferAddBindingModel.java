@@ -1,5 +1,6 @@
 package com.example.clothes_shop.models.bindingModels;
 
+import com.example.clothes_shop.models.enums.ConditionEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,8 @@ public class OfferAddBindingModel {
     private String gender;
     @NotNull
     private List<String> sizes;
+    @NotNull
+    private ConditionEnum clotheCondition;
     @NotNull
     private List<MultipartFile> pictures;
 
@@ -66,6 +69,14 @@ public class OfferAddBindingModel {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public ConditionEnum getClotheCondition() {
+        return clotheCondition;
+    }
+
+    public void setClotheCondition(ConditionEnum clotheCondition) {
+        this.clotheCondition = clotheCondition;
     }
 
     public List<String> getSizes() {

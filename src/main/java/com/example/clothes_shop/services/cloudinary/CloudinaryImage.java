@@ -1,9 +1,17 @@
 package com.example.clothes_shop.services.cloudinary;
 
-public class CloudinaryImage {
+import com.example.clothes_shop.models.entities.BaseEntity;
+import com.example.clothes_shop.models.entities.OfferEntity;
+
+import javax.persistence.*;
+
+@Entity
+public class CloudinaryImage extends BaseEntity {
 
     public String url;
     public String publicId;
+    @ManyToOne
+    public OfferEntity offer;
 
     public String getUrl() {
         return url;
@@ -19,5 +27,13 @@ public class CloudinaryImage {
 
     public void setPublicId(String publicId) {
         this.publicId = publicId;
+    }
+
+    public OfferEntity getOffer() {
+        return offer;
+    }
+
+    public void setOffer(OfferEntity offer) {
+        this.offer = offer;
     }
 }

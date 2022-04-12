@@ -29,8 +29,8 @@
             </a>
             <ul class="offer-details list-group list-group-flush">
                 <li class="list-group-item">
-                    <div th:text="*{name}" class="card-text"><span>• Name</span></div>
-                    <div th:text="*{price}"  class="card-text price"><span>• Price</span></div>
+                    <div th:text="*{name}" class="card-text"><span>Име</span></div>
+                    <div th:text="*{price}"  class="card-text price"><span>Цена</span></div>
                     <input type="hidden" name="price" id="price-value" th:value="*{price}">
                     <a class="card-link" th:href="@{/offers/{id}/details(id=*{id})}">Details</a>
                 </li>

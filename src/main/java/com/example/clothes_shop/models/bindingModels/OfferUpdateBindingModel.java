@@ -1,14 +1,12 @@
 package com.example.clothes_shop.models.bindingModels;
 
 import com.example.clothes_shop.models.enums.CategoryEnum;
+import com.example.clothes_shop.models.enums.ConditionEnum;
 import com.example.clothes_shop.models.enums.GenderEnum;
 import com.example.clothes_shop.models.enums.SizeEnum;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,11 +14,14 @@ public class OfferUpdateBindingModel {
 
     private long id;
     @NotNull
+    @Size(min = 3, max = 20)
     private String name;
     @NotNull
     @NotBlank
+    @Size(min = 5, max = 200)
     private String description;
     @NotNull
+    @Positive
     private BigDecimal price;
     @NotNull
     private CategoryEnum category;
@@ -28,6 +29,8 @@ public class OfferUpdateBindingModel {
     private GenderEnum gender;
     @NotNull
     private List<SizeEnum> sizes;
+    @NotNull
+    private ConditionEnum clotheCondition;
 
     public long getId() {
         return id;
@@ -83,5 +86,13 @@ public class OfferUpdateBindingModel {
 
     public void setSizes(List<SizeEnum> sizes) {
         this.sizes = sizes;
+    }
+
+    public ConditionEnum getClotheCondition() {
+        return clotheCondition;
+    }
+
+    public void setClotheCondition(ConditionEnum clotheCondition) {
+        this.clotheCondition = clotheCondition;
     }
 }

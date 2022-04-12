@@ -272,20 +272,21 @@ body > div.container-fluid.align-content-center > section > ul > li:nth-child(9)
      top: 50%;
      transform: translateY(-50%);
      padding-bottom: 200px;
+     margin-top: 29px;
 }
 
 .carousel .carousel__actions button {
-     border-radius: 50px;
+     border-radius: 10px;
      border: 0;
      font-weight: bold;
      cursor: pointer;
-     width: 40px;
+     width: 10px;
      height: 40px;
 
 }
 
 .carousel .carousel__actions button#carousel__button--prev {
-     margin-left: 20px;
+     margin-left:5px;
 }
 
 .carousel .carousel__actions button#carousel__button--next {
@@ -328,14 +329,17 @@ body > div.container-fluid.align-content-center > section > ul > li:nth-child(9)
 ;
 }
 
-.trash-icon {
-     font-size: 23px;
+.delete-image {
+
      cursor: pointer;
       display: inherit;
      text-align: right;
-     color: #dc3545;
-     padding-right: 8px;
-     padding-bottom: 2px;
 
+
+}
+
+#pages{
+     display: flex;
+     justify-content: center;
 }
 

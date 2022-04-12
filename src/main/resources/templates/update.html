@@ -14,7 +14,7 @@
 
 
 <div class="container">
-    <h2 class="text-center text-white">Update Offer</h2>
+    <h2 class="text-center text-dark">Редактиране на офертата</h2>
     <form
             th:object="${offer}"
             th:action="@{/offer/{id}/update(id=*{id})}"
@@ -27,16 +27,16 @@
             <div class="form-group col-md-6 mb-3">
                 <label  for="price" class="text-dark font-weight-bold h5">Цена</label>
                 <input id="price" th:field="*{price}"  th:errorclass="is-invalid" type="number" class="form-control"
-                       placeholder="Цена"/>
+                       placeholder=""/>
                 <p class="invalid-feedback errors alert alert-danger">
                     Цената е задължителна.
                 </p>
             </div>
             <div class="form-group col-md-6 mb-3">
                 <label  for="name" class="text-dark font-weight-bold h5">Име на офертата</label>
-                <input id="name" th:field="*{name}"  th:errorclass="is-invalid" type="number" class="form-control"
-                       placeholder="Suggested price"/>
-                <p class="invalid-feedback errors alert alert-danger">
+                <input id="name" th:field="*{name}"  th:errorclass="is-invalid" type="text" class="form-control"
+                       placeholder="Име на офертата"/>
+                <p class="errors alert alert-danger invalid-feedback">
                     Името е задължително.
                 </p>
             </div>
@@ -45,9 +45,8 @@
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-dark font-weight-bold h5" for="category">Категория</label>
                 <select th:name="category"  th:errorclass="is-invalid" id="category" class="form-control">
-                    <option value="">- Select engine type -</option>
                     <option th:each="category : ${categories}"
-                            th:text="${category}"
+                            th:text="${category.label}"
                             th:value="${category}"
                             th:selected="${category} ==  *{category}"
                     >
@@ -61,9 +60,8 @@
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-dark font-weight-bold h5" for="gender">Пол</label>
                 <select th:name="gender"  th:errorclass="is-invalid" id="gender" class="form-control">
-                    <option value="">- Select transmission type -</option>
                     <option th:each="gender : ${genders}"
-                            th:text="${gender}"
+                            th:text="${gender.label}"
                             th:value="${gender}"
                             th:selected="${gender} ==  *{gender}"> Пол
                     </option>
@@ -98,7 +96,18 @@
                 </p>
             </div>
         </div>
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-dark font-weight-bold h5" for="condition">Състояние</label>
+                <select  th:field="*{clotheCondition}" th:errorclass="is-invalid" id="condition" class="form-control">
+                    <option th:each="c : ${conditions}"  th:text="${c.label}" th:value="${c}" th:selected="${c.name()}" type="check-box" value="">- Изберете състояние -</option>
 
+                </select>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да изберете състояние!
+                </p>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col col-md-4">

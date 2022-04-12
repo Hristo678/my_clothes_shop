@@ -4,10 +4,7 @@ import com.example.clothes_shop.models.bindingModels.OfferAddBindingModel;
 import com.example.clothes_shop.models.bindingModels.OfferUpdateBindingModel;
 import com.example.clothes_shop.models.entities.OfferEntity;
 import com.example.clothes_shop.models.entities.UserEntity;
-import com.example.clothes_shop.models.enums.CategoryEnum;
-import com.example.clothes_shop.models.enums.GenderEnum;
-import com.example.clothes_shop.models.enums.RoleEnum;
-import com.example.clothes_shop.models.enums.SizeEnum;
+import com.example.clothes_shop.models.enums.*;
 import com.example.clothes_shop.repositories.OffersRepository;
 import com.example.clothes_shop.repositories.UserRepository;
 import com.example.clothes_shop.services.OffersService;
@@ -15,6 +12,9 @@ import com.example.clothes_shop.services.UserService;
 import com.example.clothes_shop.services.cloudinary.CloudinaryImage;
 import com.example.clothes_shop.services.cloudinary.CloudinaryService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +34,7 @@ public class OffersServiceImpl implements OffersService {
     private ModelMapper modelMapper;
     private UserService userService;
     private UserRepository userRepository;
+
     private  static boolean isOwner = false;
 
     public OffersServiceImpl(OffersRepository offersRepository, CloudinaryService cloudinaryService, ModelMapper modelMapper, UserService userService, UserRepository userRepository) {
@@ -59,32 +60,44 @@ public class OffersServiceImpl implements OffersService {
     }
 
     @Override
+    @Transactional
     public void addOffer(OfferAddBindingModel offerAddBindingModel, String username) throws IOException {
+
+        OfferEntity offer = modelMapper.map(offerAddBindingModel, OfferEntity.class);
+        offer.setCategory(CategoryEnum.valueOf(offerAddBindingModel.getCategory()));
+        offer.setGender(GenderEnum.valueOf(offerAddBindingModel.getGender()));
+        offer.setOwner(userService.findByUsername(username));
+        offer.setApproved(false);
+        offersRepository.save(offer);
+
         List<CloudinaryImage> cloudinaryImages = new ArrayList<>();
         List<MultipartFile> images = offerAddBindingModel.getPictures();
         images.forEach(i -> {
             try {
                 CloudinaryImage cloudinaryImage = cloudinaryService.upload(i);
+                cloudinaryImage.setOffer(offer);
+                cloudinaryService.saveImage(cloudinaryImage);
                 cloudinaryImages.add(cloudinaryImage);
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+
+        offer.setImagesUrl(cloudinaryImages);
 //        CloudinaryImage cloudinaryImage = cloudinaryService.upload(offerAddBindingModel.getPicture());
-        OfferEntity offer = modelMapper.map(offerAddBindingModel, OfferEntity.class);
-        offer.setCategory(CategoryEnum.valueOf(offerAddBindingModel.getCategory()));
-        offer.setGender(GenderEnum.valueOf(offerAddBindingModel.getGender()));
+
+
 //        offerAddBindingModel.getSizes().forEach(s -> {
 //            offer.addSize(SizeEnum.valueOf(s));
 //        });
 //        offer.setSize(SizeEnum.valueOf(offerAddBindingModel.getSize()));
-        offer.setOwner(userService.findByUsername(username));
-        List<String> imagesUrls = cloudinaryImages.stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
-        offer.setImagesUrl(imagesUrls);
-//        offer.setImagesUrl(List.of(cloudinaryImage.getUrl()));
-        offer.setApproved(false);
 
-        offersRepository.save(offer);
+//        List<String> imagesUrls = cloudinaryImages.stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
+
+//        offer.setImagesUrl(List.of(cloudinaryImage.getUrl()));
+
 
 
     }
@@ -139,6 +152,7 @@ public class OffersServiceImpl implements OffersService {
         offerEntity.setCategory(offer.getCategory());
         offerEntity.setDescription(offer.getDescription());
         offerEntity.setName(offer.getName());
+        offerEntity.setClotheCondition(offer.getClotheCondition());
         offersRepository.save(offerEntity);
     }
 
@@ -150,7 +164,9 @@ public class OffersServiceImpl implements OffersService {
         pictures.forEach(p -> {
             try {
                 CloudinaryImage cloudinaryImage = cloudinaryService.upload(p);
-                offerEntity.getImagesUrl().add(cloudinaryImage.url);
+                cloudinaryImage.setOffer(offerEntity);
+                cloudinaryService.saveImage(cloudinaryImage);
+                offerEntity.getImagesUrl().add(cloudinaryImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -166,30 +182,36 @@ public class OffersServiceImpl implements OffersService {
     @Override
     public void init() {
         if (offersRepository.count() == 0){
+            CloudinaryImage cloudinaryImage1 = new CloudinaryImage();
+            cloudinaryImage1.setPublicId("boss_22_s80xkd");
+            cloudinaryImage1.setUrl("https://res.cloudinary.com/ditaldvoc/image/upload/v1646848238/boss_22_s80xkd.jpg");
+            CloudinaryImage cloudinaryImage2 = new CloudinaryImage();
+            cloudinaryImage2.setPublicId("boss_oikd6x");
+            cloudinaryImage2.setUrl("https://res.cloudinary.com/ditaldvoc/image/upload/v1646844485/boss_oikd6x.jpg");
+
+            cloudinaryService.saveImage(cloudinaryImage1);
+            cloudinaryService.saveImage(cloudinaryImage2);
+
             OfferEntity offerEntity = new OfferEntity();
             offerEntity.setName("Теникса на Boss");
             offerEntity.setDescription("Предлагам чисто нова тениска на Boss, не е използвана и е в перфектно състояние!");
             offerEntity.setCategory(CategoryEnum.SHIRT);
             offerEntity.setSizes(List.of(SizeEnum.M));
+            offerEntity.setClotheCondition(ConditionEnum.NEW);
             offerEntity.setGender(GenderEnum.MALE);
             offerEntity.setOwner(userService.findById(1));
             offerEntity.setPrice(BigDecimal.valueOf(100));
-            offerEntity.setImagesUrl(List.of("https://res.cloudinary.com/ditaldvoc/image/upload/v1637492723/pf1kjoerci4aricvgofg.jpg",
-                    "https://res.cloudinary.com/ditaldvoc/image/upload/v1638713283/hbeu50387414_001_350_cfvhyo.jpg"));
+            offerEntity.setImagesUrl(List.of(cloudinaryImage1,
+                    cloudinaryImage2));
             offersRepository.save(offerEntity);
 
-            OfferEntity offerEntity2 = new OfferEntity();
-            offerEntity2.setName("Яке на The North Face");
-            offerEntity2.setDescription("Предлагам яке на The North Face, много добре топли и е в перфектно състояние!");
-            offerEntity2.setCategory(CategoryEnum.JACKET);
-            offerEntity2.setSizes(List.of(SizeEnum.L));
-            offerEntity2.setGender(GenderEnum.MALE);
-            offerEntity2.setOwner(userService.findById(1));
-            offerEntity2.setPrice(BigDecimal.valueOf(250));
-            offerEntity2.setImagesUrl(List.of("https://res.cloudinary.com/ditaldvoc/image/upload/v1638713416/the-north-face-pukheno-iake-retro-nuptse-nf0a4timjk31-cheren-regular-fit_u8fwlx.jpg",
-                    "https://res.cloudinary.com/ditaldvoc/image/upload/v1638713424/341852.002_3_jsvs7m.jpg"));
-            offersRepository.save(offerEntity2);
+
         }
 
+    }
+
+    @Override
+    public Page<OfferEntity> findAllByPage(int page, int size) {
+        return offersRepository.findAll(PageRequest.of(page, size));
     }
 }

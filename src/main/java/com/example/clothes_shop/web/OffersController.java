@@ -5,6 +5,7 @@ import com.example.clothes_shop.models.bindingModels.OfferUpdateBindingModel;
 import com.example.clothes_shop.models.entities.OfferEntity;
 import com.example.clothes_shop.models.entities.UserEntity;
 import com.example.clothes_shop.models.enums.CategoryEnum;
+import com.example.clothes_shop.models.enums.ConditionEnum;
 import com.example.clothes_shop.models.enums.GenderEnum;
 import com.example.clothes_shop.models.enums.SizeEnum;
 import com.example.clothes_shop.models.viewModels.OfferDetailViewModel;
@@ -12,10 +13,10 @@ import com.example.clothes_shop.models.viewModels.OfferViewModel;
 import com.example.clothes_shop.models.viewModels.UserDetailsView;
 import com.example.clothes_shop.services.OffersService;
 import com.example.clothes_shop.services.UserService;
-import org.apache.commons.lang.StringUtils;
+import com.example.clothes_shop.services.cloudinary.CloudinaryImage;
+import com.example.clothes_shop.services.cloudinary.CloudinaryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,12 +37,14 @@ public class OffersController {
     private ModelMapper modelMapper;
     private OffersService offersService;
     private UserService userService;
+    private CloudinaryService cloudinaryService;
 
 
-    public OffersController(ModelMapper modelMapper, OffersService offersService, UserService userService) {
+    public OffersController(ModelMapper modelMapper, OffersService offersService, UserService userService, CloudinaryService cloudinaryService) {
         this.modelMapper = modelMapper;
         this.offersService = offersService;
         this.userService = userService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     @GetMapping("/offers/add")
@@ -49,6 +52,7 @@ public class OffersController {
         model.addAttribute("categories", CategoryEnum.values());
         model.addAttribute("genders", GenderEnum.values());
         model.addAttribute("size", SizeEnum.values());
+        model.addAttribute("conditions", ConditionEnum.values());
 
         return "offer-add";
     }
@@ -73,30 +77,26 @@ public class OffersController {
     @Transactional
     @GetMapping("/offers/{gender}")
     public String offers(Model model, @PathVariable String gender) {
-        List<OfferViewModel> offers = new ArrayList<>();
+        List<OfferViewModel> offers;
         if (gender.equals("ALL")){
-            offers = offersService.findAllOffers().stream().map(o -> {
-                OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
-                offer.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
-                return offer;
-            }).collect(Collectors.toList());
+            offers = offersService.findAllOffers().stream()
+                    .map(this::mapToOfferViewModel).collect(Collectors.toList());
         }else if (gender.equals("MEN")){
-            offers = offersService.findAllOffers().stream().filter(o -> o.getGender().name().equals("MALE")).map(o -> {
-                OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
-                offer.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
-                return offer;
-            }).collect(Collectors.toList());
+            offers = offersService.findAllOffers().stream().filter(o -> o.getGender().name().equals("MALE"))
+                    .map(this::mapToOfferViewModel).collect(Collectors.toList());
         }else {
-            offers = offersService.findAllOffers().stream().filter(o -> o.getGender().name().equals("FEMALE")).map(o -> {
-                OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
-                offer.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
-                return offer;
-            }).collect(Collectors.toList());
+            offers = offersService.findAllOffers().stream().filter(o -> o.getGender().name().equals("FEMALE"))
+                    .map(this::mapToOfferViewModel).collect(Collectors.toList());
         }
 
         model.addAttribute("offers", offers);
+        model.addAttribute("clothConditions", ConditionEnum.values());
 
         return "offers";
+    }
+
+    private List<String> getImageUrl(OfferEntity o) {
+        return o.getImagesUrl().stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
     }
 
     @Transactional
@@ -110,6 +110,7 @@ public class OffersController {
         OfferDetailViewModel offerDetailViewModel = modelMapper.map(offer, OfferDetailViewModel.class);
         offerDetailViewModel.setSellerFirstAndLAstName(offer.getOwner().getFirstName() + " " + offer.getOwner().getLastName());
         offerDetailViewModel.setImagesUrl(offer.getImagesUrl());
+        offerDetailViewModel.setClotheCondition(offer.getClotheCondition());
         String sizes = offer.getSizes().stream().map(Enum::toString).collect(Collectors.joining(" "));
 
 
@@ -129,7 +130,8 @@ public class OffersController {
         UserDetailsView userDetailsView = modelMapper.map(owner, UserDetailsView.class);
         List<OfferViewModel> offers = offersService.findAllByOwner(owner).stream().map(o -> {
             OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
-            offer.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
+            List<String> imageUrls = getImageUrl(o);
+            offer.setImageUrl(imageUrls.stream().findFirst().orElse(null));
             return offer;
         }).collect(Collectors.toList());
         model.addAttribute("offers", offers);
@@ -145,7 +147,8 @@ public class OffersController {
         UserDetailsView userDetailsView = modelMapper.map(owner, UserDetailsView.class);
         List<OfferViewModel> offers = offersService.findAllByOwner(owner).stream().map(o -> {
             OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
-            offer.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
+            List<String> imageUrls = getImageUrl(o);
+            offer.setImageUrl(imageUrls.stream().findFirst().orElse(null));
             return offer;
         }).collect(Collectors.toList());
 
@@ -173,15 +176,15 @@ public class OffersController {
         model.addAttribute("genders", GenderEnum.values());
         model.addAttribute("categories", CategoryEnum.values());
         model.addAttribute("sizes", SizeEnum.values());
+        model.addAttribute("conditions", ConditionEnum.values());
         return "update";
     }
 
     @PatchMapping("offer/{id}/update")
     @PreAuthorize("@offersServiceImpl.isOwner(#user.name, #id)")
-    public String update(@PathVariable Long id ,
-                         @Valid OfferUpdateBindingModel offer,
+    public String update(@Valid OfferUpdateBindingModel offer,
                          BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes, Principal user){
+                         RedirectAttributes redirectAttributes, @PathVariable Long id , Principal user){
 
         if (bindingResult.hasErrors()){
 
@@ -204,9 +207,24 @@ public class OffersController {
         return "redirect:/offers/"+ id + "/details";
     }
 
+    @PostMapping("/offers/image/delete/{publicId}")
+    public String deleteImage(@PathVariable String publicId){
+        String id = publicId;
+            cloudinaryService.destroy(publicId);
+            cloudinaryService.deleteImage(publicId);
+            return "redirect:/";
+    }
+
 
     @ModelAttribute
     public OfferAddBindingModel offerAddBindingModel() {
         return new OfferAddBindingModel();
+    }
+
+    private OfferViewModel mapToOfferViewModel(OfferEntity o){
+        OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
+        List<String> imageUrls = getImageUrl(o);
+        offer.setImageUrl(imageUrls.stream().findFirst().orElse(null));
+        return offer;
     }
 }

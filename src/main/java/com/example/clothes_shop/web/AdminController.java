@@ -33,7 +33,8 @@ public class AdminController {
         List<OfferViewModel> offers = offersService.findAllNotApprovedOffers()
                 .stream().map(o -> {
                     OfferViewModel offerViewModel = modelMapper.map(o, OfferViewModel.class);
-                    offerViewModel.setImageUrl(o.getImagesUrl().stream().findFirst().orElse(null));
+                    List<String> imageUrls = getImageUrl(o);
+                    offerViewModel.setImageUrl(imageUrls.stream().findFirst().orElse(null));
                     return offerViewModel;
                 })
                 .collect(Collectors.toList());
@@ -41,6 +42,9 @@ public class AdminController {
         model.addAttribute("offers", offers);
 
         return "admin";
+    }
+    private List<String> getImageUrl(OfferEntity o) {
+        return o.getImagesUrl().stream().map(offer -> offer.getUrl()).collect(Collectors.toList());
     }
 
     @PostMapping("/approve/{id}")

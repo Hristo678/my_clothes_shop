@@ -14,4 +14,5 @@ public interface OffersRepository extends JpaRepository<OfferEntity, Long> {
     List<OfferEntity> findAllByOwnerIs(UserEntity owner);
     List<OfferEntity> findAllByApprovedIsTrue();
     List<OfferEntity> findAllByApprovedIsFalse();
+
 }

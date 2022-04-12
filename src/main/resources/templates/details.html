@@ -23,9 +23,10 @@
 
                     <span class="font-weight-bold">Име на продукта: </span><div th:text="*{name}" class="card-text"></div>
                     <span class="font-weight-bold">Цена:</span> <div th:text="*{price}" class="card-text"></div>
-                    <span class="font-weight-bold">Категория:</span><div th:text="*{category.name()}" class="card-text"></div>
+                    <span class="font-weight-bold">Категория:</span><div th:text="*{category.label}" class="card-text"></div>
                     <span class="font-weight-bold">Размери:</span><div th:text="${sizes}" class="card-text"></div>
-                    <span class="font-weight-bold">Пол:</span><div th:text="*{gender.name()}" class="card-text"></div>
+                    <span class="font-weight-bold">Състояние:</span><div th:text="*{clotheCondition.label}" class="card-text"></div>
+                    <span class="font-weight-bold">Пол:</span><div th:text="*{gender.label}" class="card-text"></div>
                     <span class="font-weight-bold">Профил на продавача:</span>
                     <a th:href="@{/seller/details/{offerId}(offerId=*{id})}">
                         <div th:text="*{getSellerFirstAndLAstName()}" class="text-primary "></div>
@@ -50,17 +51,20 @@
             </div>
         </div>
         <div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
-            <form  th:if="${showDeleteAndUpdateButton}" th:action="@{/offers/image/delete/{id}(id=*{id})}">
-                <i  class="bi bi-x-circle-fill trash-icon"></i>
-            </form>
+
             <div th:each="image : *{imagesUrl}">
 
                 <div class="carousel">
 
                     <div class="carousel__item" >
 
+                        <form  th:if="${showDeleteAndUpdateButton}" th:action="@{/offers/image/delete/{publicId}(publicId=${image.getPublicId()})}" th:method="POST">
+                            <button type="submit" class="btn btn-danger text-dark delete-image">Изтрий снимката.</button>
 
-                        <img th:src="${image}" />
+
+
+                        </form>
+                        <img th:src="${image.getUrl()}" />
                     </div>
 
 

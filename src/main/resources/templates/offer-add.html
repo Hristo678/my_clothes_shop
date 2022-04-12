@@ -48,7 +48,7 @@
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-dark font-weight-bold h5" for="category">Категория</label>
                 <select th:field="*{category}" th:errorclass="is-invalid" id="category" class="form-control">
-                    <option th:each="c : ${categories}"  th:text="${c.name()}" th:value="${c}" th:selected="${c.name()}" value="">- Изберете категория -</option>
+                    <option th:each="c : ${categories}"  th:text="${c.label}" th:value="${c}" th:selected="${c.name()}" value="">- Изберете категория -</option>
 
                 </select>
                 <p class="errors alert alert-danger invalid-feedback">
@@ -60,13 +60,26 @@
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-dark font-weight-bold h5" for="gender">Пол</label>
                 <select th:field="*{gender}" th:errorclass="is-invalid" id="gender" class="form-control">
-                    <option th:each="g : ${genders}"  th:text="${g.name()}" th:value="${g}" th:selected="${g.name()}" value="">- Изберете пол -</option>
+                    <option th:each="g : ${genders}"  th:text="${g.label}" th:value="${g}" th:selected="${g.name()}" value="">- Изберете пол -</option>
 
                 </select>
                 <p class="errors alert alert-danger invalid-feedback">
                     Необходимо е да изберете пол!
                 </p>
             </div>
+            <div class="form-group col-md-6 mb-3">
+                <label class="text-center text-dark font-weight-bold h5" for="condition">Състояние</label>
+                <select  th:field="*{clotheCondition}" th:errorclass="is-invalid" id="condition" class="form-control">
+                    <option th:each="c : ${conditions}"  th:text="${c.label}" th:value="${c}" th:selected="${c.name()}" type="check-box" value="">- Изберете състояние -</option>
+
+                </select>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да изберете състояние!
+                </p>
+            </div>
+        </div>
+        <div class="row">
+
             <div class="form-group col-md-6 mb-3">
                 <label class="text-center text-dark font-weight-bold h5" for="size">Размери</label>
                 <select multiple th:field="*{sizes}" th:errorclass="is-invalid" id="size" class="form-control">
@@ -77,16 +90,17 @@
                     Необходимо е да изберете размер!
                 </p>
             </div>
+            <div class="form-group">
+                <label class="text-dark font-weight-bold h5" for="imageUrl">Снимки</label>
+                <input th:field="*{pictures}" th:errorclass="is-invalid" id="imageUrl" type="file" multiple class="form-control image-input"
+                       placeholder="Put vehicle image URL here" required>
+                <p class="errors alert alert-danger invalid-feedback">
+                    Необходимо е да сложите снимка!
+                </p>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label class="text-dark font-weight-bold h5" for="imageUrl">Снимка</label>
-            <input th:field="*{pictures}" th:errorclass="is-invalid" id="imageUrl" type="file" multiple class="form-control image-input"
-                   placeholder="Put vehicle image URL here" required>
-            <p class="errors alert alert-danger invalid-feedback">
-                Необходимо е да сложите снимка!
-            </p>
-        </div>
+
 
         <div class="row">
             <div class="col col-md-4">

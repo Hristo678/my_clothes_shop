@@ -1,6 +1,7 @@
 package com.example.clothes_shop.models.viewModels;
 
 import com.example.clothes_shop.models.enums.CategoryEnum;
+import com.example.clothes_shop.models.enums.ConditionEnum;
 
 import java.math.BigDecimal;
 
@@ -11,6 +12,7 @@ public class OfferViewModel {
     private String name;
     private BigDecimal price;
     private CategoryEnum category;
+    private ConditionEnum clotheCondition;
 
     public long getId() {
         return id;
@@ -50,5 +52,13 @@ public class OfferViewModel {
 
     public void setCategory(CategoryEnum category) {
         this.category = category;
+    }
+
+    public ConditionEnum getClotheCondition() {
+        return clotheCondition;
+    }
+
+    public void setClotheCondition(ConditionEnum clotheCondition) {
+        this.clotheCondition = clotheCondition;
     }
 }

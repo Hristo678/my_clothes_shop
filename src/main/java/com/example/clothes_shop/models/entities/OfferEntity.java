@@ -1,8 +1,10 @@
 package com.example.clothes_shop.models.entities;
 
 import com.example.clothes_shop.models.enums.CategoryEnum;
+import com.example.clothes_shop.models.enums.ConditionEnum;
 import com.example.clothes_shop.models.enums.GenderEnum;
 import com.example.clothes_shop.models.enums.SizeEnum;
+import com.example.clothes_shop.services.cloudinary.CloudinaryImage;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -16,6 +18,7 @@ public class OfferEntity extends BaseEntity {
 
     private String name;
     private BigDecimal price;
+    @Column(columnDefinition = "TEXT")
     private String description;
     @ManyToOne
     private UserEntity owner;
@@ -26,8 +29,10 @@ public class OfferEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     private List<SizeEnum> sizes;
-    @ElementCollection(fetch = FetchType.LAZY)
-    private List<String> imagesUrl;
+    @Enumerated(EnumType.STRING)
+    private ConditionEnum clotheCondition;
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL)
+    private List<CloudinaryImage> imagesUrl;
     private int viewsCount;
     private boolean approved;
 
@@ -87,11 +92,19 @@ public class OfferEntity extends BaseEntity {
         this.sizes = sizes;
     }
 
-    public List<String> getImagesUrl() {
+    public ConditionEnum getClotheCondition() {
+        return clotheCondition;
+    }
+
+    public void setClotheCondition(ConditionEnum clotheCondition) {
+        this.clotheCondition = clotheCondition;
+    }
+
+    public List<CloudinaryImage> getImagesUrl() {
         return imagesUrl;
     }
 
-    public void setImagesUrl(List<String> imagesUrl) {
+    public void setImagesUrl(List<CloudinaryImage> imagesUrl) {
         this.imagesUrl = imagesUrl;
     }
 
