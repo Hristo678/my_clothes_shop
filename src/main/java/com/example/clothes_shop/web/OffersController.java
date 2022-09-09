@@ -16,6 +16,8 @@ import com.example.clothes_shop.services.UserService;
 import com.example.clothes_shop.services.cloudinary.CloudinaryImage;
 import com.example.clothes_shop.services.cloudinary.CloudinaryService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,29 +78,88 @@ public class OffersController {
     }
 
     @Transactional
-    @GetMapping("/offers/{gender}")
-    public String offers(Model model, @PathVariable String gender) {
+    @GetMapping("/offers/{gender}/{page}/{size}")
+    public String offers(Model model, @PathVariable String gender, @RequestParam(value = "keyword", required = false, defaultValue = "blanc")
+            String keyword, @PathVariable int page, @PathVariable int size) {
         List<OfferViewModel> offers;
-        if (gender.equals("ALL")){
-            offers = offersService.findAllOffers().stream()
+        Page<OfferEntity> offersEntities;
+        if (keyword.equals("blanc")){
+            offersEntities = offersService.findAllWithGender(GenderEnum.valueOf(gender), page, size);
+            offers = offersEntities.stream()
                     .map(this::mapToOfferViewModel).collect(Collectors.toList());
-        }else if (gender.equals("MEN")){
-            offers = offersService.findAllOffers().stream().filter(o -> o.getGender().name().equals("MALE"))
-                    .map(this::mapToOfferViewModel).collect(Collectors.toList());
+            keyword = "";
         }else {
-            offers = offersService.findAllOffers().stream().filter(o -> o.getGender().name().equals("FEMALE"))
+            offersEntities = offersService.findAllWithKeyword(GenderEnum.valueOf(gender), keyword, keyword, page, size);
+            offers = offersEntities.stream()
                     .map(this::mapToOfferViewModel).collect(Collectors.toList());
         }
 
+
         model.addAttribute("offers", offers);
         model.addAttribute("clothConditions", ConditionEnum.values());
+        model.addAttribute("categories", CategoryEnum.values());
+        model.addAttribute("currentGender", gender);
+        model.addAttribute("currentCategory", "ALL");
+        model.addAttribute("currentClotheCondition", "ALL");
+        model.addAttribute("minPrice", 0);
+        model.addAttribute("maxPrice", 10000);
+        model.addAttribute("currentKeyword", keyword);
+        model.addAttribute("numberOfPages", offersEntities.getTotalPages());
+        model.addAttribute("currentPage", page);
 
         return "offers";
     }
 
-    private List<String> getImageUrl(OfferEntity o) {
-        return o.getImagesUrl().stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
+    @Transactional
+    @GetMapping("/offers/{gender}/{clotheCondition}/{category}/{minPrice}/{maxPrice}/{page}/{size}")
+    public String offersWithCriteria(Model model, @PathVariable String gender, @PathVariable String clotheCondition,
+                                     @PathVariable String category, @PathVariable double minPrice,
+                                     @PathVariable double maxPrice, @PathVariable int page, @PathVariable int size) {
+        Page<OfferEntity> offersEntities = offersService.findAllOffersWithCriteria(gender, clotheCondition,
+                category, minPrice, maxPrice , page, size);
+        List<OfferViewModel> offers = offersEntities.stream()
+                    .map(this::mapToOfferViewModel).collect(Collectors.toList());
+
+
+        model.addAttribute("offers", offers);
+        model.addAttribute("clothConditions", ConditionEnum.values());
+        model.addAttribute("categories", CategoryEnum.values());
+        model.addAttribute("currentGender", gender);
+        model.addAttribute("currentClotheCondition", clotheCondition);
+        model.addAttribute("currentCategory", category);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("numberOfPages", offersEntities.getTotalPages());
+        model.addAttribute("currentPage", page);
+
+
+
+        return "offers";
     }
+
+    @Transactional
+    @PostMapping("/offers/{gender}/{clotheCondition}/{category}/{page}/{size}")
+    public String offersWithPrice( @PathVariable String gender, @PathVariable String clotheCondition,
+                                     @PathVariable String category, @PathVariable int page, @PathVariable int size,
+                                   @RequestParam(value = "minimalPrice", required = false, defaultValue = "0") String minimalPrice,
+                                   @RequestParam(value = "maximalPrice", required = false, defaultValue = "10000") String maximalPrice) {
+        try {
+            Double.parseDouble(minimalPrice);
+        }catch (Exception ex){
+            minimalPrice = "0";
+        }
+        try {
+            Double.parseDouble(maximalPrice);
+        }catch (NumberFormatException nfe){
+            maximalPrice = "10000";
+        }
+
+        String redirectUrl = String.format("/offers/%s/%s/%s/%s/%s/%s/%s", gender, clotheCondition, category, minimalPrice, maximalPrice, page, size);
+
+        return "redirect:"+ redirectUrl;
+    }
+
+
 
     @Transactional
     @GetMapping("/offers/{id}/details")
@@ -215,16 +277,31 @@ public class OffersController {
             return "redirect:/";
     }
 
+    @PostMapping("/slectedOffers")
+    public String getSelectedOffers(OfferViewModel offer){
+        OfferViewModel offerView = offer;
+        System.out.println();
+        return "redirect:/offers/add";
+    }
+
+
+
 
     @ModelAttribute
     public OfferAddBindingModel offerAddBindingModel() {
         return new OfferAddBindingModel();
     }
 
+
+
     private OfferViewModel mapToOfferViewModel(OfferEntity o){
         OfferViewModel offer = modelMapper.map(o, OfferViewModel.class);
         List<String> imageUrls = getImageUrl(o);
         offer.setImageUrl(imageUrls.stream().findFirst().orElse(null));
         return offer;
+    }
+
+    private List<String> getImageUrl(OfferEntity o) {
+        return o.getImagesUrl().stream().map(CloudinaryImage::getUrl).collect(Collectors.toList());
     }
 }

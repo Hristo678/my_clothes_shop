@@ -2,7 +2,8 @@ package com.example.clothes_shop.models.enums;
 
 public enum ConditionEnum {
     NEW ("Ново"),
-    USED ("Използвано");
+    USED ("Използвано"),
+    ALL("Всичко");
 
     public final String label;
 

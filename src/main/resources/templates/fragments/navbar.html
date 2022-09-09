@@ -30,14 +30,22 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto col-12 justify-content-between">
-                <th:block sec:authorize="isAuthenticated()">
-                    <li class="nav-item">
+                <li class="nav-item">
 
-                        <a th:href="@{/offers/{gender}(gender=ALL)}">
-                            <button class="button nav-link font-weight-bold text-white"
-                                    style="vertical-align:middle" ><span>Всички Оферти</span></button>
-                        </a>
-                    </li>
+                    <a th:href="@{/offers/{gender}/0/3(gender=MALE)}">
+                        <button class="button nav-link font-weight-bold text-white"
+                                style="vertical-align:middle" ><span>Мъже</span></button>
+                    </a>
+                </li>
+                <li class="nav-item">
+
+                    <a th:href="@{/offers/{gender}/0/3(gender=FEMALE)}">
+                        <button class="button nav-link font-weight-bold text-white"
+                                style="vertical-align:middle" ><span>Жени</span></button>
+                    </a>
+                </li>
+                <th:block sec:authorize="isAuthenticated()">
+
                     <li class="nav-item">
                         <a class="nav-link btn font-weight-bold text-white" th:href="@{/offers/add}">Добави оферта</a>
                     </li>
@@ -66,12 +74,7 @@
 
 
                 <th:block sec:authorize="!isAuthenticated()">
-                    <li  class="nav-item" >
-                        <a th:href="@{/offers/{gender}(gender=ALL)}">
-                            <button class="button nav-link font-weight-bold text-white" style="vertical-align:middle" th:href="@{/offers/{gender}(gender=ALL)}"><span>Всички Оферти</span></button>
-                        </a>
 
-                    </li>
                     <li  class="nav-item">
                         <a class="nav-link btn font-weight-bold text-white" th:href="@{/users/register}">Регистрация</a>
                     </li>

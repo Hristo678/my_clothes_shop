@@ -55,6 +55,29 @@ public class OffersServiceImpl implements OffersService {
 
     @Transactional
     @Override
+    public Page<OfferEntity> findAllOffersWithCriteria(String gender, String clotheCondition,
+                                                       String category, double minPrice, double maxPrice, int page, int size) {
+
+        if (clotheCondition.equals("ALL") && category.equals("ALL")){
+            return offersRepository.findAllByApprovedIsTrueAndGenderEqualsAndPriceBetween(
+                    GenderEnum.valueOf(gender),
+                    BigDecimal.valueOf(minPrice), BigDecimal.valueOf(maxPrice), PageRequest.of(page, size));
+        }else if (category.equals("ALL")){
+            return offersRepository.findAllByApprovedIsTrueAndGenderEqualsAndClotheConditionEqualsAndPriceBetween(
+                    GenderEnum.valueOf(gender), ConditionEnum.valueOf(clotheCondition),
+                     BigDecimal.valueOf(minPrice), BigDecimal.valueOf(maxPrice), PageRequest.of(page, size));
+        }else if (clotheCondition.equals("ALL")){
+            return offersRepository.findAllByApprovedIsTrueAndGenderEqualsAndCategoryEqualsAndPriceBetween(
+                    GenderEnum.valueOf(gender),
+                    CategoryEnum.valueOf(category), BigDecimal.valueOf(minPrice), BigDecimal.valueOf(maxPrice), PageRequest.of(page, size));
+        }else
+        return offersRepository.findAllByApprovedIsTrueAndGenderEqualsAndClotheConditionEqualsAndCategoryEqualsAndPriceBetween(
+                GenderEnum.valueOf(gender), ConditionEnum.valueOf(clotheCondition),
+                CategoryEnum.valueOf(category), BigDecimal.valueOf(minPrice), BigDecimal.valueOf(maxPrice), PageRequest.of(page, size));
+    }
+
+    @Transactional
+    @Override
     public List<OfferEntity> findAllNotApprovedOffers() {
         return offersRepository.findAllByApprovedIsFalse();
     }
@@ -213,5 +236,17 @@ public class OffersServiceImpl implements OffersService {
     @Override
     public Page<OfferEntity> findAllByPage(int page, int size) {
         return offersRepository.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<OfferEntity> findAllWithKeyword(GenderEnum gender, String name, String description, int page, int size) {
+        return offersRepository.findAllByApprovedIsTrueAndGenderEqualsAndNameOrDescriptionContains
+                (gender,name, description, PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<OfferEntity> findAllWithGender(GenderEnum gender, int page, int size) {
+        return offersRepository.findAllByApprovedIsTrueAndGenderEquals
+                (gender,PageRequest.of(page, size));
     }
 }

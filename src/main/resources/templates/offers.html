@@ -36,40 +36,54 @@
 <div class="container-fluid align-content-center">
     <section class="nav-2 justify-content-center text-center">
         <ul>
-            <li class="list active" data-filter="ALL">Всичко</li>
-            <li class="list " data-filter="SHIRT">Тениски</li>
-            <li class="list " data-filter="JEANS">Панталони</li>
-            <li class="list " data-filter="JACKET">Якета</li>
-            <li class="list " data-filter="SWEATSHIRTS">Блузи</li>
-            <li class="list " data-filter="HATS">Шапки</li>
+            <li th:each="c : ${categories}">
+                <a th:value="${c}" th:text="${c.label}" th:class="list "
+                   th:href="@{/offers/{gender}/{clotheCondition}/{category}/{minPrice}/{maxPrice}/0/3(category=${c}
+                   , gender=${currentGender}, clotheCondition = ${currentClotheCondition}, minPrice = ${minPrice}, maxPrice = ${maxPrice})}">
+                </a>
+            </li>
 
             <li>
-                <label class="slider-box" for="priceRange">Цена</label>
-            </li>
-            <li>
-                <input class="slider-box" type="text" id="priceRange" readonly>
-            </li>
-            <li>
-                <div id="price-range" class="slider slider-box"></div>
-            </li>
-            <li class="filter " data-filter="filter">Филтрирай</li>
-            <li class data-filter="HATS">
-                <form name="formid">
-                    <label  for="clothCondition">Състояние</label>
-                    <select class="clothCondition" id="clothCondition">
-                        <option class="clothCondition" value="ALL">Всичко</option>
-                        <option th:each="c : ${clothConditions}" class="clothCondition"  th:text="${c.label}" th:value="${c}"  ></option>
-                    </select>
+                <form th:method="POST"
+                      th:action="@{/offers/{gender}/{clotheCondition}/{category}/0/3(category=${currentCategory}
+                   , gender=${currentGender}, clotheCondition = ${currentClotheCondition})}">
+                    <label  >Цена </label>
+                    <label for="priceRangeMin">от</label>
+                    <input th:value="${minPrice}"  name="minimalPrice"  type="text" id="priceRangeMin" >
+                    <label for="priceRangeMax">до</label>
+                    <input th:value="${maxPrice}"  name="maximalPrice"  type="text" id="priceRangeMax" >
+
+                        <input type="submit" class="btn btn-info btn-lg text-white font-weight-bold" value="Филтрирай"/>
+
                 </form>
+                </li>
 
+            <li class data-filter="HATS">
+
+                        <p >Състояние: </p>
+            <li th:each="c : ${clothConditions}">
+                <a th:value="${c}" th:text="${c.label}" th:class="list "
+                   th:href="@{/offers/{gender}/{clotheCondition}/{category}/{minPrice}/{maxPrice}/0/3(category=${currentCategory}
+                   , gender=${currentGender}, clotheCondition = ${c}, minPrice = ${minPrice}, maxPrice = ${maxPrice})}">
+                </a>
             </li>
 
         </ul>
     </section>
+    <div class="text-center">
+        <form   th:method="GET"
+               th:action="@{/offers/{gender}/0/3( gender=${currentGender})}" >
+            <input type="text" th:value="${currentKeyword}" name="keyword">
+            <input type="submit" class="btn" value="Търси"/>
+        </form>
+
+    </div>
 
 
     <h2 class="text-center text-dark mt-5">Оферти</h2>
     <div class="offers row mx-auto d-flex flex-row justify-content-center">
+        <form th:method="POST" th:action="@{/slectedOffers}" >
+
         <div th:each="o : ${offers}" th:object="${o}"
              th:class="|offer card col-sm-6 col-md-3  col-lg-2 m-1 p-0 *{category.name()} *{clotheCondition.name()}  conditionFiltered categoryFiltered price- *{price}|" class="currentOffer">
             <a th:href="@{/offers/{id}/details(id=*{id})}">
@@ -83,15 +97,30 @@
                     <div th:text="*{price}"  class="card-text price"><span>• Price</span></div>
                     <input type="hidden" name="price" id="price-value" th:value="*{price}">
                     <a class="card-link" th:href="@{/offers/{id}/details(id=*{id})}">Details</a>
+                    <input type="checkbox" th:value="${o}" th:field="${o}">
+
                 </li>
             </ul>
         </div>
+            <input type="submit" class="btn" value="Търси"/>
+        </form>
     </div>
-    <div id="pages">
-        <button>prev page</button>
-        <p>num of page</p>
-        <button>next page</button>
-    </div>
+
+
+            <div id="pages">
+            <a th:if="${currentPage > 0}"
+                    th:href="@{/offers/{gender}/{clotheCondition}/{category}/{minPrice}/{maxPrice}/{page}/3(category=${currentCategory}
+                   , gender=${currentGender}, clotheCondition = ${currentClotheCondition}, minPrice = ${minPrice}
+                   , maxPrice = ${maxPrice}, page = ${page - 1})}">prev page</a>
+            <p th:text="${currentPage + 1}"></p>
+            <a th:if="${currentPage  < numberOfPages - 1}"
+                    th:href="@{/offers/{gender}/{clotheCondition}/{category}/{minPrice}/{maxPrice}/{page}/3(category=${currentCategory}
+                   , gender=${currentGender}, clotheCondition = ${currentClotheCondition}, minPrice = ${minPrice},
+                    maxPrice = ${maxPrice}, page = ${page + 1})}">next page</a>
+            </div>
+
+
+
 </div>
 
 

@@ -25,7 +25,9 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll().
-                antMatchers("/", "/offers/{gender}" ,"/users/login", "/users/register", "/about").permitAll().
+                antMatchers("/", "/offers/{gender}/{page}/{size}","/offers/{gender}/{page}/{size}/{keyword}" ,"/users/login", "/users/register", "/about",
+                        "/offers/{gender}/{clotheCondition}/{category}/{minPrice}/{maxPrice}/{page}/{size}",
+                        "/offers/{gender}/{clotheCondition}/{category}/{page}/{size}").permitAll().
                 antMatchers("/admin").hasRole("ADMIN").
                 antMatchers("/**").authenticated().
                 and().

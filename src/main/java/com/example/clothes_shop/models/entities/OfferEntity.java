@@ -25,7 +25,7 @@ public class OfferEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CategoryEnum category;
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
+    private  GenderEnum gender;
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.LAZY)
     private List<SizeEnum> sizes;
